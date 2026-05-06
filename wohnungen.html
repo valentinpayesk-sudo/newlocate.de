@@ -37,6 +37,12 @@
 
       <div class="filter-bar">
         <div class="field">
+          <label for="rentalsCountry">Land</label>
+          <select id="rentalsCountry">
+            <option data-icon="🇬🇷" value="GR">Griechenland</option>
+          </select>
+        </div>
+        <div class="field">
           <label for="rentalsSearch">Suche</label>
           <input id="rentalsSearch" type="text" placeholder="Stadt, Stadtteil, Stichwort …" />
         </div>
@@ -44,9 +50,9 @@
           <label for="rentalsType">Typ</label>
           <select id="rentalsType">
             <option value="">Alle</option>
-            <option>Wohnung</option>
-            <option>Haus</option>
-            <option>Studio</option>
+            <option data-icon="🏢">Wohnung</option>
+            <option data-icon="🏡">Haus</option>
+            <option data-icon="🛏">Studio</option>
           </select>
         </div>
         <div class="field">

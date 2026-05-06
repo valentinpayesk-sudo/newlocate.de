@@ -1,173 +1,189 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>newlocate.de — Ihr neues Leben in Griechenland</title>
-  <meta name="description" content="Komplettlösung für deutsche Auswanderer nach Griechenland — Jobs, Wohnungen und ein Blog mit allen wichtigen Informationen." />
+  <meta name="description"
+    content="Komplettlösung für deutsche Auswanderer nach Griechenland — Jobs, Wohnungen und ein Blog mit allen wichtigen Informationen." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
-<div class="outer-frame">
-  <div class="frame-inner">
+  <div class="outer-frame">
+    <div class="frame-inner">
 
-    <!-- Hero mit Navigation darüber -->
-    <section class="hero">
-      <nav class="nav on-hero">
-        <div class="brand">newlocate.de</div>
-        <ul class="nav-links">
-          <li><a href="index.html" class="active">Start</a></li>
-          <li><a href="jobs.html">Jobs</a></li>
-          <li><a href="wohnungen.html">Wohnungen</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="#kontakt">Kontakt</a></li>
-        </ul>
-        <a href="#beratung" class="nav-cta">Kostenlose Beratung</a>
-        <button class="menu-toggle" aria-label="Menü öffnen">☰</button>
-      </nav>
-
-      <div class="hero-content">
-        <h1>Ihr neues Leben<br />beginnt in Griechenland</h1>
-        <p class="lead">
-          Die Komplettlösung für deutsche Auswanderer:
-          Jobs, Wohnungen und Behördenwissen — alles an einem Ort.
-        </p>
-
-        <form id="homeSearch" class="search-card">
-          <div class="field">
-            <label for="homeKind">Ich suche</label>
-            <select id="homeKind">
-              <option value="jobs">Einen Job</option>
-              <option value="rentals">Eine Wohnung</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="homeRegion">Region</label>
-            <select id="homeRegion">
-              <option value="">Alle Regionen</option>
-              <option>Alexandropolis</option>
-              <option>Katerini</option>
-              <option>Kavala</option>
-              <option>Kilkis</option>
-              <option>Serres</option>
-              <option>Thessaloniki</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="homeTime">Umzugszeitpunkt</label>
-            <select id="homeTime">
-              <option>So schnell wie möglich</option>
-              <option>In 1–3 Monaten</option>
-              <option>In 6 Monaten</option>
-              <option>Später / unverbindlich</option>
-            </select>
-          </div>
-          <button type="submit" class="btn-primary">Jetzt suchen</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- Vorteile -->
-    <section class="section">
-      <div class="section-head">
-        <div class="eyebrow">Warum newlocate.de</div>
-        <h2>Alles, was Sie für den Neustart brauchen — aus einer Hand</h2>
-        <p class="sub">Wir kennen Griechenland und das deutsche Verwaltungssystem. So vermeiden Sie typische Stolperfallen und sparen Wochen an Recherche.</p>
-      </div>
-      <div class="features">
-        <div class="feature">
-          <div class="ico">★</div>
-          <h3>Geprüfte Jobs</h3>
-          <p>Stellen von seriösen Arbeitgebern in Griechenland — viele mit Visa-Hilfe und deutschsprachigem Umfeld.</p>
-        </div>
-        <div class="feature">
-          <div class="ico">⌂</div>
-          <h3>Wohnungen mit Vertrauen</h3>
-          <p>Mietangebote von verifizierten Vermietern. Keine Maklergebühren-Fallen, transparente Bedingungen.</p>
-        </div>
-        <div class="feature">
-          <div class="ico">€</div>
-          <h3>Behörden-Know-How</h3>
-          <p>AFM, AMKA, Krankenversicherung — unser Blog erklärt jeden Schritt aus deutscher Perspektive.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Jobs -->
-    <section class="section" style="padding-top:0;">
-      <div class="section-head">
-        <div class="eyebrow">Aktuelle Jobs</div>
-        <h2>Beliebte Stellen in Griechenland</h2>
-        <p class="sub">Eine kleine Auswahl aus unserem Stellenangebot. <a href="jobs.html" style="color:var(--aegean); font-weight:600;">Alle Jobs ansehen →</a></p>
-      </div>
-      <div id="featuredJobs" class="card-grid"></div>
-    </section>
-
-    <!-- Featured Rentals -->
-    <section class="section" style="padding-top:0;">
-      <div class="section-head">
-        <div class="eyebrow">Wohnen</div>
-        <h2>Wohnungen, die gerade verfügbar sind</h2>
-        <p class="sub">Vom Studio in Athen bis zum Steinhaus auf Kreta. <a href="wohnungen.html" style="color:var(--aegean); font-weight:600;">Alle Wohnungen ansehen →</a></p>
-      </div>
-      <div id="featuredRentals" class="card-grid"></div>
-    </section>
-
-    <!-- Featured Blog -->
-    <section class="section" style="padding-top:0;">
-      <div class="section-head">
-        <div class="eyebrow">Blog</div>
-        <h2>Wissen, das den Unterschied macht</h2>
-        <p class="sub">Praktische Anleitungen und Erfahrungsberichte. <a href="blog.html" style="color:var(--aegean); font-weight:600;">Zum Blog →</a></p>
-      </div>
-      <div id="featuredPosts" class="card-grid"></div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer" id="kontakt">
-      <div class="footer-grid">
-        <div>
-          <div class="brand" style="color:#fff; font-size:18px; margin-bottom:14px;">newlocate.de</div>
-          <p style="font-size:14px; max-width:340px;">Die deutsche Komplettlösung für Auswanderer nach Griechenland — Jobs, Wohnungen und ein wachsendes Wissens-Archiv.</p>
-        </div>
-        <div>
-          <h4>Service</h4>
-          <ul>
+      <!-- Hero mit Navigation darüber -->
+      <section class="hero">
+        <nav class="nav on-hero">
+          <div class="brand">newlocate.de</div>
+          <ul class="nav-links">
+            <li><a href="index.html" class="active">Start</a></li>
             <li><a href="jobs.html">Jobs</a></li>
             <li><a href="wohnungen.html">Wohnungen</a></li>
             <li><a href="blog.html">Blog</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
           </ul>
-        </div>
-        <div>
-          <h4>Unternehmen</h4>
-          <ul>
-            <li><a href="#">Über uns</a></li>
-            <li><a href="#">Beratung</a></li>
-            <li><a href="#">Partner</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4>Kontakt</h4>
-          <ul>
-            <li>info@newlocate.de</li>
-            <li>+30 210 000 0000</li>
-            <li>Athen, Griechenland</li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 newlocate.de — Alle Rechte vorbehalten</span>
-        <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
-      </div>
-    </footer>
+          <a href="#beratung" class="nav-cta">Kostenlose Beratung</a>
+          <button class="menu-toggle" aria-label="Menü öffnen">☰</button>
+        </nav>
 
+        <div class="hero-content">
+          <h1>Ihr neues Leben<br />beginnt in Griechenland</h1>
+          <p class="lead">
+            Die Komplettlösung für deutsche Auswanderer:
+            Jobs, Wohnungen und Behördenwissen — alles an einem Ort.
+          </p>
+
+          <form id="homeSearch" class="search-card">
+            <div class="field">
+              <label for="homeCountry">Land</label>
+              <select id="homeCountry">
+                <option data-icon="🇬🇷" value="GR">Griechenland</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="homeKind">Ich suche</label>
+              <select id="homeKind">
+                <option data-icon="💼" value="jobs">Einen Job</option>
+                <option data-icon="🏠" value="rentals">Eine Wohnung</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="homeRegion">Region</label>
+              <select id="homeRegion">
+                <option value="">Alle Regionen</option>
+                <option data-icon="📍">Alexandroupolis</option>
+                <option data-icon="📍">Katerini</option>
+                <option data-icon="📍">Kavala</option>
+                <option data-icon="📍">Kilkis</option>
+                <option data-icon="📍">Serres</option>
+                <option data-icon="📍">Thessaloniki</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="homeTime">Umzugszeitpunkt</label>
+              <select id="homeTime">
+                <option data-icon="⚡">So schnell wie möglich</option>
+                <option data-icon="⏱">In 1–3 Monaten</option>
+                <option data-icon="⏰">In 6 Monaten</option>
+                <option data-icon="🗓">Später / unverbindlich</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary">Jetzt suchen</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Vorteile -->
+      <section class="section">
+        <div class="section-head">
+          <div class="eyebrow">Warum newlocate.de</div>
+          <h2>Alles, was Sie für den Neustart brauchen — aus einer Hand</h2>
+          <p class="sub">Wir kennen Griechenland und das deutsche Verwaltungssystem. So vermeiden Sie typische
+            Stolperfallen und sparen Wochen an Recherche.</p>
+        </div>
+        <div class="features">
+          <div class="feature">
+            <div class="ico">★</div>
+            <h3>Geprüfte Jobs</h3>
+            <p>Stellen von seriösen Arbeitgebern in Griechenland — viele mit Visa-Hilfe und deutschsprachigem Umfeld.
+            </p>
+          </div>
+          <div class="feature">
+            <div class="ico">⌂</div>
+            <h3>Wohnungen mit Vertrauen</h3>
+            <p>Mietangebote von verifizierten Vermietern. Keine Maklergebühren-Fallen, transparente Bedingungen.</p>
+          </div>
+          <div class="feature">
+            <div class="ico">€</div>
+            <h3>Behörden-Know-How</h3>
+            <p>AFM, AMKA, Krankenversicherung — unser Blog erklärt jeden Schritt aus deutscher Perspektive.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Jobs -->
+      <section class="section" style="padding-top:0;">
+        <div class="section-head">
+          <div class="eyebrow">Aktuelle Jobs</div>
+          <h2>Beliebte Stellen in Griechenland</h2>
+          <p class="sub">Eine kleine Auswahl aus unserem Stellenangebot. <a href="jobs.html"
+              style="color:var(--aegean); font-weight:600;">Alle Jobs ansehen →</a></p>
+        </div>
+        <div id="featuredJobs" class="card-grid"></div>
+      </section>
+
+      <!-- Featured Rentals -->
+      <section class="section" style="padding-top:0;">
+        <div class="section-head">
+          <div class="eyebrow">Wohnen</div>
+          <h2>Wohnungen, die gerade verfügbar sind</h2>
+          <p class="sub">Vom Studio in Athen bis zum Steinhaus auf Kreta. <a href="wohnungen.html"
+              style="color:var(--aegean); font-weight:600;">Alle Wohnungen ansehen →</a></p>
+        </div>
+        <div id="featuredRentals" class="card-grid"></div>
+      </section>
+
+      <!-- Featured Blog -->
+      <section class="section" style="padding-top:0;">
+        <div class="section-head">
+          <div class="eyebrow">Blog</div>
+          <h2>Wissen, das den Unterschied macht</h2>
+          <p class="sub">Praktische Anleitungen und Erfahrungsberichte. <a href="blog.html"
+              style="color:var(--aegean); font-weight:600;">Zum Blog →</a></p>
+        </div>
+        <div id="featuredPosts" class="card-grid"></div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer" id="kontakt">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="color:#fff; font-size:18px; margin-bottom:14px;">newlocate.de</div>
+            <p style="font-size:14px; max-width:340px;">Die deutsche Komplettlösung für Auswanderer nach Griechenland —
+              Jobs, Wohnungen und ein wachsendes Wissens-Archiv.</p>
+          </div>
+          <div>
+            <h4>Service</h4>
+            <ul>
+              <li><a href="jobs.html">Jobs</a></li>
+              <li><a href="wohnungen.html">Wohnungen</a></li>
+              <li><a href="blog.html">Blog</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Unternehmen</h4>
+            <ul>
+              <li><a href="#">Über uns</a></li>
+              <li><a href="#">Beratung</a></li>
+              <li><a href="#">Partner</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Kontakt</h4>
+            <ul>
+              <li>info@newlocate.de</li>
+              <li>+30 210 000 0000</li>
+              <li>Athen, Griechenland</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 newlocate.de — Alle Rechte vorbehalten</span>
+          <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
+        </div>
+      </footer>
+
+    </div>
   </div>
-</div>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>

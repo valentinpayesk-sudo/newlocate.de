@@ -394,7 +394,93 @@ function initFeatured() {
   if (postsFeat) postsFeat.innerHTML = POSTS.slice(0, 3).map(postCard).join('');
 }
 
+/* =========================================================
+   Custom Dropdowns — ersetzen native <select> visuell
+   ========================================================= */
+
+function enhanceSelect(select) {
+  if (select.dataset.enhanced) return;
+  select.dataset.enhanced = '1';
+
+  const host = document.createElement('div');
+  host.className = 'select-host';
+  select.parentNode.insertBefore(host, select);
+  host.appendChild(select);
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'select-toggle';
+  toggle.innerHTML = '<span class="t-icon"></span><span class="t-label"></span><span class="chev">▾</span>';
+  host.appendChild(toggle);
+
+  const menu = document.createElement('ul');
+  menu.className = 'select-menu';
+  menu.setAttribute('role', 'listbox');
+  host.appendChild(menu);
+
+  function buildMenu() {
+    menu.innerHTML = '';
+    Array.from(select.options).forEach(opt => {
+      const li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.dataset.value = opt.value;
+      const icon = opt.dataset.icon || '';
+      li.innerHTML = `<span class="item-icon">${icon}</span><span class="item-label"></span>`;
+      li.querySelector('.item-label').textContent = opt.textContent;
+      li.addEventListener('click', () => {
+        select.value = opt.value;
+        select.dispatchEvent(new Event('input', { bubbles: true }));
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        updateLabel();
+        host.classList.remove('open');
+      });
+      menu.appendChild(li);
+    });
+  }
+
+  function updateLabel() {
+    const opt = select.options[select.selectedIndex];
+    const labelEl = toggle.querySelector('.t-label');
+    const iconEl = toggle.querySelector('.t-icon');
+    if (!opt) {
+      labelEl.textContent = '';
+      iconEl.innerHTML = '';
+    } else {
+      labelEl.textContent = opt.textContent;
+      iconEl.innerHTML = opt.dataset.icon || '';
+    }
+    Array.from(menu.children).forEach(li => {
+      if (li.dataset.value === select.value) li.setAttribute('aria-selected', 'true');
+      else li.removeAttribute('aria-selected');
+    });
+  }
+
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.select-host.open').forEach(h => {
+      if (h !== host) h.classList.remove('open');
+    });
+    host.classList.toggle('open');
+  });
+
+  document.addEventListener('click', e => {
+    if (!host.contains(e.target)) host.classList.remove('open');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') host.classList.remove('open');
+  });
+
+  buildMenu();
+  updateLabel();
+}
+
+function enhanceAllSelects() {
+  document.querySelectorAll('select').forEach(enhanceSelect);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  enhanceAllSelects();
   initHomeSearch();
   initJobs();
   initRentals();

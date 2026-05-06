@@ -1,5 +1,5 @@
 /* =========================================================
-   AUSWANDERN.GR — Globale Stile
+   newlocate.de — Globale Stile
    ========================================================= */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,7 +32,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 input, select { font: inherit; color: inherit; }
 
 /* =========================================================
-   Layout-Rahmen (wie im Design — gerundeter Außenrahmen)
+   Außenrahmen
    ========================================================= */
 
 .outer-frame {
@@ -108,7 +108,7 @@ input, select { font: inherit; color: inherit; }
 .menu-toggle { display: none; }
 
 /* =========================================================
-   Hero
+   Hero — mit Santorini-Foto (austauschbar)
    ========================================================= */
 
 .hero {
@@ -120,9 +120,11 @@ input, select { font: inherit; color: inherit; }
   text-align: center;
   color: #fff;
   padding: 140px 32px 80px;
-  overflow: hidden;
+  overflow: visible; /* damit Dropdowns aus der Such-Card herausragen dürfen */
+  /* Foto: bei Bedarf einfach die URL durch ein eigenes Bild ersetzen */
   background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.05) 40%, rgba(15, 23, 42, 0.4) 100%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.10) 35%, rgba(15, 23, 42, 0.55) 100%),
+    url('https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=2400&q=80') center/cover no-repeat,
     linear-gradient(135deg, #2a3a6b 0%, #c46b8a 35%, #f08f6a 65%, #f5c374 100%);
 }
 
@@ -131,8 +133,8 @@ input, select { font: inherit; color: inherit; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 78% 55%, rgba(255, 220, 130, 0.7) 0%, transparent 30%),
-    radial-gradient(circle at 15% 80%, rgba(20, 40, 90, 0.5) 0%, transparent 50%);
+    radial-gradient(circle at 78% 55%, rgba(255, 220, 130, 0.35) 0%, transparent 35%),
+    radial-gradient(circle at 15% 85%, rgba(20, 40, 90, 0.35) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -140,6 +142,7 @@ input, select { font: inherit; color: inherit; }
   position: relative;
   z-index: 2;
   max-width: 900px;
+  width: 100%;
 }
 
 .hero h1 {
@@ -147,7 +150,7 @@ input, select { font: inherit; color: inherit; }
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
   margin-bottom: 22px;
 }
 
@@ -156,15 +159,15 @@ input, select { font: inherit; color: inherit; }
   max-width: 540px;
   margin: 0 auto 56px;
   opacity: 0.95;
-  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
 }
 
-/* Search / booking glass card */
+/* Such-Card */
 .search-card {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   margin: 0 auto;
-  max-width: 880px;
+  max-width: 980px;
   padding: 18px;
   background: var(--glass);
   backdrop-filter: blur(24px) saturate(140%);
@@ -172,13 +175,14 @@ input, select { font: inherit; color: inherit; }
   border: 1px solid var(--glass-strong);
   border-radius: 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: repeat(4, 1fr) auto;
   gap: 12px;
   align-items: end;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
 }
 
 .field {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -194,7 +198,6 @@ input, select { font: inherit; color: inherit; }
   opacity: 0.85;
 }
 
-.field select,
 .field input {
   background: transparent;
   border: none;
@@ -206,7 +209,6 @@ input, select { font: inherit; color: inherit; }
   width: 100%;
 }
 
-.field select option { color: var(--ink); }
 .field input::placeholder { color: rgba(255,255,255,0.7); }
 
 .btn-primary {
@@ -222,7 +224,110 @@ input, select { font: inherit; color: inherit; }
 .btn-primary:hover { background: var(--aegean-deep); transform: translateY(-1px); }
 
 /* =========================================================
-   Sections
+   Custom Select (ersetzt natives <select>)
+   ========================================================= */
+
+.select-host { position: relative; width: 100%; }
+.select-host > select { display: none; }
+
+.select-toggle {
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  min-height: 26px;
+}
+.select-toggle .t-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+.select-toggle .t-icon:empty { display: none; }
+.select-toggle .t-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.select-toggle .chev {
+  margin-left: 6px;
+  font-size: 11px;
+  opacity: 0.7;
+  transition: transform .2s;
+}
+.select-host.open .select-toggle .chev { transform: rotate(180deg); }
+
+/* Popup-Menü — Stil wie das Kontextmenü auf dem Screenshot */
+.select-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: 320px;
+  background: #ffffff;
+  color: var(--ink);
+  border-radius: 14px;
+  box-shadow:
+    0 24px 50px -12px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(15, 23, 42, 0.06);
+  padding: 8px;
+  z-index: 100;
+  list-style: none;
+  display: none;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.select-host.open .select-menu { display: block; animation: menuPop .15s ease-out; }
+
+@keyframes menuPop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.select-menu li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .12s;
+  white-space: nowrap;
+}
+.select-menu li:hover {
+  background: #f3f1ec;
+}
+.select-menu li[aria-selected="true"] {
+  background: rgba(31, 95, 179, 0.08);
+  color: var(--aegean-deep);
+}
+.select-menu .item-icon {
+  width: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.select-menu .item-icon:empty { width: 0; gap: 0; }
+.select-menu li:has(.item-icon:empty) { gap: 0; }
+.select-menu .item-label { flex: 1; }
+
+/* In den Filter-Leisten dunkler Text */
+.filter-bar .select-toggle { color: var(--ink); }
+
+/* =========================================================
+   Sektionen
    ========================================================= */
 
 .section {
@@ -258,7 +363,6 @@ input, select { font: inherit; color: inherit; }
   font-size: 16px;
 }
 
-/* Feature grid */
 .features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -285,7 +389,6 @@ input, select { font: inherit; color: inherit; }
 .feature h3 { font-size: 19px; margin-bottom: 8px; }
 .feature p { color: var(--muted); font-size: 15px; }
 
-/* Card grid (jobs / wohnungen / blog) */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -345,10 +448,11 @@ input, select { font: inherit; color: inherit; }
   margin-right: 6px;
 }
 
-/* Page header (non-hero pages) */
+/* Page-Header (Nicht-Hero-Seiten) */
 .page-header {
   background:
-    linear-gradient(180deg, rgba(15,23,42,0.2), rgba(15,23,42,0.5)),
+    linear-gradient(180deg, rgba(15,23,42,0.25), rgba(15,23,42,0.55)),
+    url('https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&w=2400&q=80') center/cover no-repeat,
     linear-gradient(135deg, #2a3a6b 0%, #c46b8a 50%, #f5c374 100%);
   color: #fff;
   padding: 120px 40px 80px;
@@ -359,25 +463,29 @@ input, select { font: inherit; color: inherit; }
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 14px;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
 }
 .page-header p {
   max-width: 600px;
   margin: 0 auto;
   opacity: 0.95;
   font-size: 17px;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.3);
 }
 
-/* Filter bar */
+/* Filter-Leiste */
 .filter-bar {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 18px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
+  grid-template-columns: 0.9fr 1.6fr 1fr 1fr auto;
   gap: 12px;
   margin-bottom: 32px;
   box-shadow: var(--shadow);
+  position: relative;
+  z-index: 5;
 }
 
 .filter-bar .field {
@@ -385,8 +493,7 @@ input, select { font: inherit; color: inherit; }
   padding: 10px 16px;
 }
 .filter-bar .field label { color: var(--muted); }
-.filter-bar .field input,
-.filter-bar .field select { color: var(--ink); }
+.filter-bar .field input { color: var(--ink); }
 .filter-bar .field input::placeholder { color: var(--muted); }
 
 .no-results {
@@ -426,9 +533,6 @@ input, select { font: inherit; color: inherit; }
   opacity: 0.7;
 }
 
-/* =========================================================
-   Blog detail (article cards expanded)
-   ========================================================= */
 .blog-card .card-body p {
   color: var(--muted);
   font-size: 14px;
@@ -443,7 +547,14 @@ input, select { font: inherit; color: inherit; }
    Responsive
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .search-card { grid-template-columns: repeat(2, 1fr); }
+  .search-card .btn-primary { grid-column: 1 / -1; }
+  .filter-bar { grid-template-columns: 1fr 1fr; }
+  .filter-bar .btn-primary { grid-column: 1 / -1; }
+}
+
+@media (max-width: 700px) {
   .outer-frame { padding: 12px; }
   .nav { padding: 18px 22px; }
   .nav.on-hero { left: 12px; right: 12px; top: 12px; }
@@ -451,9 +562,7 @@ input, select { font: inherit; color: inherit; }
   .menu-toggle { display: block; font-size: 22px; }
   .nav-cta { padding: 8px 16px; font-size: 12px; }
 
-  .search-card { grid-template-columns: 1fr 1fr; }
-  .search-card .btn-primary { grid-column: 1 / -1; }
-
+  .search-card { grid-template-columns: 1fr; }
   .features { grid-template-columns: 1fr; }
   .filter-bar { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
