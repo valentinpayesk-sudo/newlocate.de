@@ -5,17 +5,15 @@
 // Beispieldaten — leicht zu erweitern oder durch eine API zu ersetzen
 const JOBS = [
   {
-    title: 'Deutschsprachiger Kundenberater',
-    company: 'AegeanTech Athens',
-    location: 'Athen',
+    title: 'Kundenservicemitarbeiter für Vodafone',
+    location: 'Serres',
     type: 'Vollzeit',
-    salary: '€2.400 – €3.000',
+    salary: '€1.600 – €3.600',
     tags: ['Remote möglich', 'Deutsch C1', 'Quereinstieg'],
-    desc: 'Betreuung deutscher Kunden im Bereich SaaS. Modernes Büro im Zentrum von Athen, hybrides Arbeiten möglich.',
+    desc: 'Betreuung deutscher Kunden im Bereich Telekomunikation. Modernes Büro im Zentrum von Athen, hybrides Arbeiten möglich.',
   },
   {
     title: 'Hotelmanager (m/w/d)',
-    company: 'Caldera Suites',
     location: 'Santorin',
     type: 'Saison',
     salary: '€3.200 – €4.500',
@@ -24,16 +22,14 @@ const JOBS = [
   },
   {
     title: 'Softwareentwickler Backend',
-    company: 'Hellas Digital',
     location: 'Thessaloniki',
-    type: 'Vollzeit',
+    type: 'Hybrid',
     salary: '€3.500 – €5.000',
-    tags: ['Remote', 'Node.js', 'Visa-Hilfe'],
+    tags: ['Node.js', 'Visa-Hilfe', '3 Tage Office'],
     desc: 'Entwicklung skalierbarer Backend-Services für FinTech-Kunden in der EU. Englisch reicht aus.',
   },
   {
     title: 'Restaurantleiter Taverne',
-    company: 'Mythos Restaurant Group',
     location: 'Kreta — Chania',
     type: 'Vollzeit',
     salary: '€2.200 – €2.800',
@@ -42,7 +38,6 @@ const JOBS = [
   },
   {
     title: 'Pflegefachkraft (m/w/d)',
-    company: 'Athens Senior Care',
     location: 'Athen — Glyfada',
     type: 'Vollzeit',
     salary: '€2.000 – €2.600',
@@ -51,7 +46,6 @@ const JOBS = [
   },
   {
     title: 'Reiseleiter Helikopter-Touren',
-    company: 'Aegean Sky Tours',
     location: 'Mykonos',
     type: 'Saison',
     salary: '€2.800 – €3.500',
@@ -60,7 +54,6 @@ const JOBS = [
   },
   {
     title: 'Yachtkapitän / Skipper',
-    company: 'Blue Horizon Charter',
     location: 'Korfu',
     type: 'Saison',
     salary: '€4.000 – €6.000',
@@ -69,12 +62,11 @@ const JOBS = [
   },
   {
     title: 'Online-Marketing Manager',
-    company: 'Olive & Co.',
-    location: 'Remote — Griechenland',
-    type: 'Vollzeit',
+    location: 'Athen + Home-Office',
+    type: 'Hybrid',
     salary: '€2.800 – €3.800',
-    tags: ['100% Remote', 'SEO/SEA'],
-    desc: 'Performance-Marketing für deutsche E-Commerce-Brands. Du wohnst, wo du willst — solange WLAN da ist.',
+    tags: ['SEO/SEA', '1 Tag Office / Woche'],
+    desc: 'Performance-Marketing für deutsche E-Commerce-Brands. Flexibel zwischen Co-Working in Athen und zu Hause.',
   },
 ];
 
@@ -211,7 +203,7 @@ function jobCard(j) {
       <div class="card-body">
         <h3>${j.title}</h3>
         <div class="card-meta">
-          <span>${j.company}</span><span>${j.location}</span>
+          <span>${j.location}</span>
         </div>
         <p style="color:var(--muted); font-size:14px;">${j.desc}</p>
         <div>${j.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
