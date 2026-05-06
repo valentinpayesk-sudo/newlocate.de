@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — newlocate.de</title>
+  <meta name="description" content="Erfahrungsberichte, Anleitungen und Behördenwissen rund um das Auswandern nach Griechenland." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="outer-frame">
+  <div class="frame-inner">
+
+    <nav class="nav">
+      <div class="brand">newlocate.de</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Start</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="wohnungen.html">Wohnungen</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="index.html#kontakt">Kontakt</a></li>
+      </ul>
+      <a href="index.html#beratung" class="nav-cta">Kostenlose Beratung</a>
+      <button class="menu-toggle" aria-label="Menü öffnen">☰</button>
+    </nav>
+
+    <header class="page-header">
+      <h1>Auswanderer-Blog</h1>
+      <p>Erfahrungsberichte, Behördenwissen und praktische Anleitungen — geschrieben für Deutsche, die wirklich nach Griechenland gehen.</p>
+    </header>
+
+    <section class="section">
+
+      <div class="filter-bar">
+        <div class="field">
+          <label for="blogSearch">Suche</label>
+          <input id="blogSearch" type="text" placeholder="Stichwort, Autor, Thema …" />
+        </div>
+        <div class="field">
+          <label for="blogCategory">Kategorie</label>
+          <select id="blogCategory">
+            <option value="">Alle</option>
+            <option>Leitfaden</option>
+            <option>Behörden</option>
+            <option>Gesundheit</option>
+            <option>Erfahrungsbericht</option>
+            <option>Familie</option>
+            <option>Praktisch</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <span style="color:var(--muted); font-size:13px;">6 Artikel</span>
+        </div>
+        <button type="button" class="btn-primary" onclick="document.getElementById('blogSearch').focus()">Filtern</button>
+      </div>
+
+      <div id="blogGrid" class="card-grid"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="color:#fff; font-size:18px; margin-bottom:14px;">newlocate.de</div>
+          <p style="font-size:14px; max-width:340px;">Die deutsche Komplettlösung für Auswanderer nach Griechenland.</p>
+        </div>
+        <div>
+          <h4>Service</h4>
+          <ul>
+            <li><a href="jobs.html">Jobs</a></li>
+            <li><a href="wohnungen.html">Wohnungen</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Unternehmen</h4>
+          <ul>
+            <li><a href="#">Über uns</a></li>
+            <li><a href="#">Beratung</a></li>
+            <li><a href="#">Partner</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontakt</h4>
+          <ul>
+            <li>info@newlocate.de</li>
+            <li>+30 210 000 0000</li>
+            <li>Athen, Griechenland</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 newlocate.de — Alle Rechte vorbehalten</span>
+        <span><a href="#">Impressum</a> · <a href="#">Datenschutz</a></span>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
