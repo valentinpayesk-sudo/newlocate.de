@@ -737,6 +737,17 @@ input, select { font: inherit; color: inherit; }
 }
 .auth-error.show { display: block; }
 
+.auth-success {
+  color: #1e6f3a;
+  font-size: 13px;
+  background: #e6f4ea;
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: none;
+  line-height: 1.45;
+}
+.auth-success.show { display: block; }
+
 .auth-switch {
   text-align: center;
   margin-top: 18px;

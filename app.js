@@ -536,36 +536,18 @@ function enhanceAllSelects() {
 }
 
 /* =========================================================
-   Auth — Login + Registrierung (lokal im Browser)
-   Speichert User in localStorage. Für Produktion durch
-   Supabase / Firebase / eigenes Backend ersetzen.
+   Auth — Supabase (Login + Registrierung)
+   Konfiguration in supabase-config.js. Wenn die nicht ausgefüllt
+   ist, sehen die Buttons noch da, zeigen aber einen Hinweis.
    ========================================================= */
 
-const AUTH_USERS_KEY = 'nl_users';
-const AUTH_SESSION_KEY = 'nl_session';
-
-async function sha256(str) {
-  const buf = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
-
-function getUsers() {
-  return JSON.parse(localStorage.getItem(AUTH_USERS_KEY) || '[]');
-}
-function setUsers(users) {
-  localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(users));
-}
-function getSession() {
-  const raw = localStorage.getItem(AUTH_SESSION_KEY);
-  return raw ? JSON.parse(raw) : null;
-}
-function setSession(s) {
-  if (s) localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(s));
-  else localStorage.removeItem(AUTH_SESSION_KEY);
-}
+const supabaseClient = (
+  window.supabase &&
+  window.SUPABASE_URL &&
+  !window.SUPABASE_URL.startsWith('DEINE')
+)
+  ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+  : null;
 
 function injectAuthModal() {
   if (document.getElementById('authOverlay')) return;
@@ -581,6 +563,7 @@ function injectAuthModal() {
         <p class="auth-sub">Melden Sie sich an, um Jobs und Wohnungen zu speichern.</p>
         <form class="auth-form" id="loginForm" autocomplete="on">
           <div class="auth-error" id="loginError"></div>
+          <div class="auth-success" id="loginSuccess"></div>
           <div class="auth-field">
             <label for="loginEmail">E-Mail</label>
             <input type="email" id="loginEmail" required autocomplete="email" />
@@ -601,6 +584,7 @@ function injectAuthModal() {
         <p class="auth-sub">Kostenlos in 30 Sekunden — keine Kreditkarte nötig.</p>
         <form class="auth-form" id="registerForm" autocomplete="on">
           <div class="auth-error" id="registerError"></div>
+          <div class="auth-success" id="registerSuccess"></div>
           <div class="auth-field">
             <label for="regName">Vor- und Nachname</label>
             <input type="text" id="regName" required autocomplete="name" />
@@ -652,7 +636,7 @@ function openAuth(view) {
 function closeAuth() {
   const overlay = document.getElementById('authOverlay');
   overlay.classList.remove('open');
-  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.auth-error, .auth-success').forEach(e => e.classList.remove('show'));
   document.querySelectorAll('.auth-form').forEach(f => f.reset());
 }
 
@@ -660,76 +644,111 @@ function switchAuthView(view) {
   document.querySelectorAll('.auth-view').forEach(el => {
     el.classList.toggle('active', el.dataset.view === view);
   });
-  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.auth-error, .auth-success').forEach(e => e.classList.remove('show'));
 }
 
-function showAuthError(formId, msg) {
-  const id = formId === 'loginForm' ? 'loginError' : 'registerError';
-  const el = document.getElementById(id);
+function showAuthMsg(formId, type, msg) {
+  const errId = formId === 'loginForm' ? 'loginError' : 'registerError';
+  const okId  = formId === 'loginForm' ? 'loginSuccess' : 'registerSuccess';
+  const el    = document.getElementById(type === 'error' ? errId : okId);
+  const other = document.getElementById(type === 'error' ? okId : errId);
   el.textContent = msg;
   el.classList.add('show');
+  other.classList.remove('show');
+}
+
+function translateAuthError(msg) {
+  if (!msg) return 'Ein unbekannter Fehler ist aufgetreten.';
+  const m = msg.toLowerCase();
+  if (m.includes('invalid login credentials')) return 'E-Mail oder Passwort sind nicht korrekt.';
+  if (m.includes('user already registered')) return 'Diese E-Mail ist bereits registriert.';
+  if (m.includes('email not confirmed')) return 'Bitte bestätige zuerst deine E-Mail-Adresse — schau in dein Postfach.';
+  if (m.includes('password should be')) return 'Das Passwort ist zu kurz.';
+  if (m.includes('rate limit')) return 'Zu viele Versuche — bitte ein paar Minuten warten.';
+  if (m.includes('failed to fetch') || m.includes('network')) return 'Keine Verbindung zum Server. Internet prüfen?';
+  return msg;
+}
+
+function ensureSupabase(formId) {
+  if (!supabaseClient) {
+    showAuthMsg(formId, 'error', 'Supabase ist noch nicht eingerichtet. Bitte URL und Anon-Key in supabase-config.js eintragen.');
+    return false;
+  }
+  return true;
 }
 
 async function handleLogin(e) {
   e.preventDefault();
+  if (!ensureSupabase('loginForm')) return;
   const email = document.getElementById('loginEmail').value.trim().toLowerCase();
   const password = document.getElementById('loginPassword').value;
-  const users = getUsers();
-  const hash = await sha256(password);
-  const user = users.find(u => u.email === email && u.password === hash);
-  if (!user) {
-    showAuthError('loginForm', 'E-Mail oder Passwort sind nicht korrekt.');
+  const submit = e.target.querySelector('.auth-submit');
+  submit.disabled = true; submit.textContent = 'Anmelden …';
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  submit.disabled = false; submit.textContent = 'Anmelden';
+  if (error) {
+    showAuthMsg('loginForm', 'error', translateAuthError(error.message));
     return;
   }
-  setSession({ email: user.email, name: user.name });
   closeAuth();
-  updateAuthUI();
+  // updateAuthUI wird durch onAuthStateChange ausgelöst
 }
 
 async function handleRegister(e) {
   e.preventDefault();
+  if (!ensureSupabase('registerForm')) return;
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim().toLowerCase();
   const pw = document.getElementById('regPassword').value;
   const pw2 = document.getElementById('regPassword2').value;
   if (pw !== pw2) {
-    showAuthError('registerForm', 'Die Passwörter stimmen nicht überein.');
+    showAuthMsg('registerForm', 'error', 'Die Passwörter stimmen nicht überein.');
     return;
   }
   if (pw.length < 8) {
-    showAuthError('registerForm', 'Das Passwort muss mindestens 8 Zeichen haben.');
+    showAuthMsg('registerForm', 'error', 'Das Passwort muss mindestens 8 Zeichen haben.');
     return;
   }
-  const users = getUsers();
-  if (users.some(u => u.email === email)) {
-    showAuthError('registerForm', 'Diese E-Mail ist bereits registriert.');
+  const submit = e.target.querySelector('.auth-submit');
+  submit.disabled = true; submit.textContent = 'Konto wird erstellt …';
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password: pw,
+    options: { data: { full_name: name } },
+  });
+  submit.disabled = false; submit.textContent = 'Konto erstellen';
+  if (error) {
+    showAuthMsg('registerForm', 'error', translateAuthError(error.message));
     return;
   }
-  const hash = await sha256(pw);
-  users.push({ name, email, password: hash, createdAt: new Date().toISOString() });
-  setUsers(users);
-  setSession({ email, name });
-  closeAuth();
-  updateAuthUI();
+  if (data.session) {
+    closeAuth();
+  } else {
+    showAuthMsg('registerForm', 'success',
+      'Fast geschafft! Wir haben dir eine Bestätigungs-Mail geschickt — bitte den Link darin anklicken.');
+    e.target.reset();
+  }
 }
 
-function updateAuthUI() {
-  const session = getSession();
+function updateAuthUI(session) {
   document.querySelectorAll('.nav-actions').forEach(el => {
     el.innerHTML = '';
-    if (session) {
+    if (session && session.user) {
+      const fullName = session.user.user_metadata && session.user.user_metadata.full_name;
+      const displayName = fullName ? fullName.split(' ')[0] : session.user.email.split('@')[0];
+
       const greeting = document.createElement('span');
       greeting.className = 'nav-user';
-      greeting.textContent = `Hallo, ${session.name.split(' ')[0]}`;
+      greeting.textContent = `Hallo, ${displayName}`;
       el.appendChild(greeting);
 
       const logout = document.createElement('button');
       logout.className = 'nav-logout';
       logout.type = 'button';
       logout.textContent = 'Abmelden';
-      logout.addEventListener('click', () => {
-        setSession(null);
-        updateAuthUI();
+      logout.addEventListener('click', async () => {
+        if (supabaseClient) await supabaseClient.auth.signOut();
+        else updateAuthUI(null);
       });
       el.appendChild(logout);
     } else {
@@ -750,9 +769,18 @@ function updateAuthUI() {
   });
 }
 
-function initAuth() {
+async function initAuth() {
   injectAuthModal();
-  updateAuthUI();
+  if (supabaseClient) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    updateAuthUI(session);
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      updateAuthUI(session);
+    });
+  } else {
+    updateAuthUI(null);
+    console.warn('[Newlocate] Supabase nicht konfiguriert — bitte URL und Anon-Key in supabase-config.js eintragen.');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
