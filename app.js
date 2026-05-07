@@ -5,12 +5,12 @@
 // Beispieldaten — leicht zu erweitern oder durch eine API zu ersetzen
 const JOBS = [
   {
-    title: 'Kundenservicemitarbeiter für Vodafone',
+    title: 'Kundenservicemitarbeiter für Vodafone (m/w/d)',
     location: 'Serres',
     type: 'Vollzeit',
     salary: '€1.600 – €3.600',
     tags: ['Remote möglich', 'Deutsch C1', 'Quereinstieg'],
-    desc: 'Betreuung deutscher Kunden im Bereich Telekomunikation. Modernes Büro im Zentrum von Athen, hybrides Arbeiten möglich.',
+    desc: 'Betreuung deutscher Kunden im Bereich Telekommunikation. Modernes Büro im Zentrum von Serres, hybrides Arbeiten möglich.',
   },
   {
     title: 'Hotelmanager (m/w/d)',
@@ -67,6 +67,70 @@ const JOBS = [
     salary: '€2.800 – €3.800',
     tags: ['SEO/SEA', '1 Tag Office / Woche'],
     desc: 'Performance-Marketing für deutsche E-Commerce-Brands. Flexibel zwischen Co-Working in Athen und zu Hause.',
+  },
+  {
+    title: 'Lehrkraft Deutsch als Fremdsprache',
+    location: 'Athen — Kifissia',
+    type: 'Vollzeit',
+    salary: '€1.900 – €2.500',
+    tags: ['Goethe-Zertifikat', 'Erfahrung mit Kindern'],
+    desc: 'Deutschunterricht an einer privaten Sprachschule. Mind. 24 Wochenstunden, kleine Gruppen.',
+  },
+  {
+    title: 'Buchhalter mit deutschen Steuerkenntnissen',
+    location: 'Thessaloniki',
+    type: 'Hybrid',
+    salary: '€2.500 – €3.200',
+    tags: ['DATEV', 'Steuerrecht DE', '2 Tage Office'],
+    desc: 'Begleitung deutscher Mandanten in Griechenland — Lohnabrechnung, USt-Voranmeldungen, Jahresabschluss.',
+  },
+  {
+    title: 'Bauleiter Hochbau',
+    location: 'Kreta — Heraklion',
+    type: 'Vollzeit',
+    salary: '€3.200 – €4.200',
+    tags: ['Bauingenieur', 'Englisch', 'Dienstwagen'],
+    desc: 'Steuerung mehrerer Wohnbauprojekte für Investoren aus dem DACH-Raum. Eigener Dienstwagen.',
+  },
+  {
+    title: 'Animateur im Familien-Resort',
+    location: 'Rhodos',
+    type: 'Saison',
+    salary: '€1.700 – €2.300',
+    tags: ['Unterkunft + Verpflegung', 'Mai – Oktober'],
+    desc: 'Kinder- und Familienprogramm in einem 4-Sterne-Resort. Deutschkenntnisse zwingend, Englisch von Vorteil.',
+  },
+  {
+    title: 'Immobilienmakler für deutsche Käufer',
+    location: 'Athen + Inseln',
+    type: 'Vollzeit',
+    salary: '€1.800 + Provision',
+    tags: ['Hohe Provision', 'Eigener Kundenstamm möglich'],
+    desc: 'Beratung deutscher Käufer beim Erwerb von Ferien- und Renditeimmobilien. Vertriebserfahrung erforderlich.',
+  },
+  {
+    title: 'KFZ-Mechaniker mit Diagnose-Erfahrung',
+    location: 'Thessaloniki',
+    type: 'Vollzeit',
+    salary: '€1.900 – €2.500',
+    tags: ['Markenwerkstatt', 'Weiterbildung'],
+    desc: 'Wartung und Reparatur europäischer PKW. Erfahrung mit OBD-Diagnose und Hybridfahrzeugen wünschenswert.',
+  },
+  {
+    title: 'Fitness- & Wellness-Trainer',
+    location: 'Korfu',
+    type: 'Saison',
+    salary: '€2.000 – €2.800',
+    tags: ['Lizenz erforderlich', 'Unterkunft inkl.'],
+    desc: 'Personal Training und Gruppenkurse in einem Wellness-Resort. Saison April bis Oktober.',
+  },
+  {
+    title: 'Customer Success Manager (DACH)',
+    location: 'Athen + Remote',
+    type: 'Hybrid',
+    salary: '€3.000 – €4.000',
+    tags: ['SaaS', '2 Tage Office', 'Stock Options'],
+    desc: 'Betreuung deutscher Enterprise-Kunden. Onboarding, QBRs, Renewals — auf Deutsch und Englisch.',
   },
 ];
 
@@ -471,8 +535,229 @@ function enhanceAllSelects() {
   document.querySelectorAll('select').forEach(enhanceSelect);
 }
 
+/* =========================================================
+   Auth — Login + Registrierung (lokal im Browser)
+   Speichert User in localStorage. Für Produktion durch
+   Supabase / Firebase / eigenes Backend ersetzen.
+   ========================================================= */
+
+const AUTH_USERS_KEY = 'nl_users';
+const AUTH_SESSION_KEY = 'nl_session';
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function getUsers() {
+  return JSON.parse(localStorage.getItem(AUTH_USERS_KEY) || '[]');
+}
+function setUsers(users) {
+  localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(users));
+}
+function getSession() {
+  const raw = localStorage.getItem(AUTH_SESSION_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+function setSession(s) {
+  if (s) localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(s));
+  else localStorage.removeItem(AUTH_SESSION_KEY);
+}
+
+function injectAuthModal() {
+  if (document.getElementById('authOverlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'authOverlay';
+  overlay.className = 'auth-overlay';
+  overlay.innerHTML = `
+    <div class="auth-modal" role="dialog" aria-modal="true">
+      <button class="auth-close" type="button" aria-label="Schließen">✕</button>
+
+      <div class="auth-view active" data-view="login">
+        <h2>Willkommen zurück</h2>
+        <p class="auth-sub">Melden Sie sich an, um Jobs und Wohnungen zu speichern.</p>
+        <form class="auth-form" id="loginForm" autocomplete="on">
+          <div class="auth-error" id="loginError"></div>
+          <div class="auth-field">
+            <label for="loginEmail">E-Mail</label>
+            <input type="email" id="loginEmail" required autocomplete="email" />
+          </div>
+          <div class="auth-field">
+            <label for="loginPassword">Passwort</label>
+            <input type="password" id="loginPassword" required autocomplete="current-password" />
+          </div>
+          <button type="submit" class="auth-submit">Anmelden</button>
+        </form>
+        <div class="auth-switch">
+          Noch kein Konto? <a data-switch="register">Jetzt registrieren</a>
+        </div>
+      </div>
+
+      <div class="auth-view" data-view="register">
+        <h2>Konto erstellen</h2>
+        <p class="auth-sub">Kostenlos in 30 Sekunden — keine Kreditkarte nötig.</p>
+        <form class="auth-form" id="registerForm" autocomplete="on">
+          <div class="auth-error" id="registerError"></div>
+          <div class="auth-field">
+            <label for="regName">Vor- und Nachname</label>
+            <input type="text" id="regName" required autocomplete="name" />
+          </div>
+          <div class="auth-field">
+            <label for="regEmail">E-Mail</label>
+            <input type="email" id="regEmail" required autocomplete="email" />
+          </div>
+          <div class="auth-field">
+            <label for="regPassword">Passwort (min. 8 Zeichen)</label>
+            <input type="password" id="regPassword" required minlength="8" autocomplete="new-password" />
+          </div>
+          <div class="auth-field">
+            <label for="regPassword2">Passwort wiederholen</label>
+            <input type="password" id="regPassword2" required minlength="8" autocomplete="new-password" />
+          </div>
+          <button type="submit" class="auth-submit">Konto erstellen</button>
+        </form>
+        <div class="auth-switch">
+          Schon ein Konto? <a data-switch="login">Jetzt anmelden</a>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  overlay.querySelectorAll('[data-switch]').forEach(el => {
+    el.addEventListener('click', () => switchAuthView(el.dataset.switch));
+  });
+  overlay.querySelector('.auth-close').addEventListener('click', closeAuth);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeAuth(); });
+
+  document.getElementById('loginForm').addEventListener('submit', handleLogin);
+  document.getElementById('registerForm').addEventListener('submit', handleRegister);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeAuth();
+  });
+}
+
+function openAuth(view) {
+  switchAuthView(view || 'login');
+  document.getElementById('authOverlay').classList.add('open');
+  setTimeout(() => {
+    const first = document.querySelector('.auth-view.active input');
+    if (first) first.focus();
+  }, 100);
+}
+
+function closeAuth() {
+  const overlay = document.getElementById('authOverlay');
+  overlay.classList.remove('open');
+  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.auth-form').forEach(f => f.reset());
+}
+
+function switchAuthView(view) {
+  document.querySelectorAll('.auth-view').forEach(el => {
+    el.classList.toggle('active', el.dataset.view === view);
+  });
+  document.querySelectorAll('.auth-error').forEach(e => e.classList.remove('show'));
+}
+
+function showAuthError(formId, msg) {
+  const id = formId === 'loginForm' ? 'loginError' : 'registerError';
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+  const users = getUsers();
+  const hash = await sha256(password);
+  const user = users.find(u => u.email === email && u.password === hash);
+  if (!user) {
+    showAuthError('loginForm', 'E-Mail oder Passwort sind nicht korrekt.');
+    return;
+  }
+  setSession({ email: user.email, name: user.name });
+  closeAuth();
+  updateAuthUI();
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pw = document.getElementById('regPassword').value;
+  const pw2 = document.getElementById('regPassword2').value;
+  if (pw !== pw2) {
+    showAuthError('registerForm', 'Die Passwörter stimmen nicht überein.');
+    return;
+  }
+  if (pw.length < 8) {
+    showAuthError('registerForm', 'Das Passwort muss mindestens 8 Zeichen haben.');
+    return;
+  }
+  const users = getUsers();
+  if (users.some(u => u.email === email)) {
+    showAuthError('registerForm', 'Diese E-Mail ist bereits registriert.');
+    return;
+  }
+  const hash = await sha256(pw);
+  users.push({ name, email, password: hash, createdAt: new Date().toISOString() });
+  setUsers(users);
+  setSession({ email, name });
+  closeAuth();
+  updateAuthUI();
+}
+
+function updateAuthUI() {
+  const session = getSession();
+  document.querySelectorAll('.nav-actions').forEach(el => {
+    el.innerHTML = '';
+    if (session) {
+      const greeting = document.createElement('span');
+      greeting.className = 'nav-user';
+      greeting.textContent = `Hallo, ${session.name.split(' ')[0]}`;
+      el.appendChild(greeting);
+
+      const logout = document.createElement('button');
+      logout.className = 'nav-logout';
+      logout.type = 'button';
+      logout.textContent = 'Abmelden';
+      logout.addEventListener('click', () => {
+        setSession(null);
+        updateAuthUI();
+      });
+      el.appendChild(logout);
+    } else {
+      const login = document.createElement('button');
+      login.className = 'nav-login';
+      login.type = 'button';
+      login.textContent = 'Anmelden';
+      login.addEventListener('click', () => openAuth('login'));
+      el.appendChild(login);
+
+      const register = document.createElement('button');
+      register.className = 'nav-register';
+      register.type = 'button';
+      register.textContent = 'Registrieren';
+      register.addEventListener('click', () => openAuth('register'));
+      el.appendChild(register);
+    }
+  });
+}
+
+function initAuth() {
+  injectAuthModal();
+  updateAuthUI();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   enhanceAllSelects();
+  initAuth();
   initHomeSearch();
   initJobs();
   initRentals();
